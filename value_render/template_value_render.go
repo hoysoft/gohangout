@@ -55,8 +55,20 @@ func init() {
 	}
 
 	funcMap["now"] = func() int64 { return time.Now().UnixNano() / 1000000 }
+	
+	//按间隔时间(分钟)，获取分钟开始时间。如29分钟=25
+	funcMap["truncMinuteTime"] = func(interval int) string {
+		t := time.Now().Format("2006010215")
+		m := time.Now().Minute() / interval * interval
+		mm := strconv.Itoa(m)
+		if m < 10 {
+			mm = "0" + mm
+		}
+		return t + mm
+	}
+
 	//按间隔时间，获取分钟开始值。如29分钟=25
-	funcMap["truncMinute"] = func(interval int) int64 { return time.Now().Minute() / interval * interval}
+	funcMap["truncMinute"] = func(interval int) int { return time.Now().Minute() / interval * interval }
 	
 	funcMap["timestamp"] = func(event map[string]interface{}) int64 {
 		timestamp := event["@timestamp"]
