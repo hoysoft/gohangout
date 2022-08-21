@@ -51,7 +51,8 @@ type BoolConverter struct{}
 
 func (c *BoolConverter) convert(v interface{}) (interface{}, error) {
 	if v, ok := v.(string); ok {
-		rst, err := strconv.ParseBool(v)
+		// rst, err := strconv.ParseBool(v)
+		rst, err := parseBool(v)
 		if err != nil {
 			return nil, err
 		} else {
@@ -60,6 +61,18 @@ func (c *BoolConverter) convert(v interface{}) (interface{}, error) {
 	}
 	return nil, ErrConvertUnknownFormat
 }
+
+//自定义字符串转bool
+func parseBool(str string) (bool, error) {
+	switch strings.ToUpper(str) {
+	case "1", "T", "TRUE", "Y", "YES":
+		return true, nil
+	case "0", "F", "FALSE", "N", "NO":
+		return false, nil
+	}
+	return false, &strconv.NumError{"ParseBool", str, strconv.ErrSyntax}
+}
+
 
 type StringConverter struct{}
 
